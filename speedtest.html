@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans&display=swap" rel="stylesheet">
+    <Style>
+        *{padding: 0;margin:0;box-sizing:border-box;font-family: 'Josefin Sans', sans-serif;}
+        
+        .mainDiv{
+            width:100%;
+            height:100vh;
+            position:relative;
+            background:#3498db;
+        }
+        .centerDiv{
+            position:absolute;
+            top:50%;
+            left:50%;
+            transform:translate(-50%,-50%);
+            text-align:center;
+        }
+        h1{ text-transform:capitalize;
+        text-align:center;
+        margin-bottom:30px;
+        color:#ecf0f1;
+        text-shadow:1px 2px 3px #2980b9;
+        font-size:2.1rem;
+        }
+        h2{text-align:center;}
+        textarea{
+            background-color:rgb(234, 255, 140);
+            box-shadow: 0 0 1px rgba(0,0,0,0.2);
+            border-radius:10px 10px 0 0;
+            border:20px solid #c5cb49;
+            color:black;
+            font-size:1.3rem;
+        }
+        .mainbtn{padding:10px 20px;
+            border-radius:20px;
+            border:5px solid #2980b9;
+            background:#ecf0f1;
+            font-size:1rem;}
+    </Style>
+</head>
+<body>
+    <div class="mainDiv">
+        <div class="centerDiv">
+            <h1>Welcome to typing speed test</h1>
+            <h2 id="msg"> </h2>
+            <br>
+            <textarea  id="mywords" cols="100" rows="10" placeholder="Remember, be nice!">
+            </textarea>
+            <br>
+            <button id="btn" class="mainbtn">Start</button>
+        </div>
+    </div>
+    <script>
+    //    Dynamic typing test
+    //    1) When user pressed start button then only active the textarea else disable it and vice-versa.
+    //    2) Every time a new set of lines on top. Whener a start button is pressed , not the done one.
+    //    3) Get the time and change the button text to done.
+    //    4) Get the end time when user clicked on done button , find the total time taken.
+    //    5) Find the total words on set of words.
+    //    6) Find the speed of the user and show it on top when user clicked on done.
+    //    7) Then call the comparewords fun and find how many of the words are matching and how many not
+    //    and display the result along with the speed on top.
+        
+        const setofWords = ["Technology growth has been a major contributor to human progress, but it can also be a source of anxiety. With the rapid evolution of new technologies, it can be difficult to keep up with the pace of change.",
+        "But it's important not to lose sight of the bigger picture and focus on how new technologies are improving our lives and advancing civilization as a whole. Still, it's clear that technology is having an impact on our daily lives and will continue to do so in the future.",
+        "If you're looking for a way to keep up with technology, just remember that there's no need to panic you can always just Google it!",
+        "Technology growth is incredible these days. It's like a never-ending roller coaster ride of new discoveries and breakthroughs, each one bringing us closer and closer to achieving our dystopian sci-fi fantasies.",
+        "But the truth is that no matter how exciting it may seem, technology growth can have some serious downsides. Take social media for example. We're constantly being told that it's a great way to stay connected with friends and family, but recent studies have shown that social media can have negative consequences for our mental health and relationships."
+        ,"And that's not to mention the fact that technology can often be a source of distraction, which can lead to reduced productivity and quality of life. So if you're planning on buying that new tech gadget just yet, maybe hold off until we've figured out how to take the whole technology for good thing a little more seriously."]
+
+        const msg=document.getElementById('msg');
+        const typeWords=document.getElementById('mywords');
+        const btn = document.getElementById('btn');
+        let startTime , endtime;
+        
+        const playGame = () => {
+            let randomNumber = Math.floor(Math.random()*setofWords.length);
+            msg.innerText=setofWords[randomNumber];    
+            let date = new Date();
+            startTime = date.getTime();
+
+            btn.innerText='Done';
+        }
+        const endPlay = () => {
+            let date = new Date();
+            endTime = date.getTime();
+            let totalTime = ((endTime - startTime)/1000); //as time is in milliseconds
+            console.log(totalTime);
+            let totalStr = typeWords.value;
+            let wordCount = wordCounter(totalStr);
+            console.log(wordCount);
+            let speed = Math.round((wordCount / totalTime) * 60);
+            console.log(speed);
+            let finalMsg = "You typed total at " +speed+ " words per minutes. ";
+            finalMsg+=compareWords(msg.innerText,totalStr);
+            msg.innerText=finalMsg;
+
+        }
+        
+        const compareWords=(str1,str2) => {
+            let words1=str1.split(" ");
+            let words2=str2.split(" ");
+            let cnt = 0;
+            words1.forEach(function(item,index){
+                if (item==words2[index]){
+                    cnt++;
+                }
+            })
+            let errorWords = (words1.length - cnt );
+            return ( cnt + " correct out of "+words1.length+" words and the total number of error are "+errorWords+".");
+            }
+        const wordCounter = (str) =>{
+            let response = str.split(" ").length;
+            return response;
+        }   
+        btn.addEventListener('click',function(){
+            if(this.innerText == 'Start'){
+                typeWords.disabled=false;
+                playGame();
+            }else if(this.innerText=="Done"){
+                typeWords.disabled=true;
+                btn.innerText="Start";
+                endPlay();
+            }
+        })
+    </script>
+</body>
+</html>
